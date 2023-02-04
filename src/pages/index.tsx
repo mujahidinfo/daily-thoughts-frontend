@@ -6,6 +6,7 @@ import Link from "next/link";
 import Thoughts from "./thoughts/Thoughts";
 import ProtectedComponents from "@/components/auth/ProtectedComponents";
 import Router from "next/router";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   const logOutHandler = () => {
@@ -22,19 +23,8 @@ export default function Home() {
       </Head>
       {/* Toaster Component*/}
       <Toaster position="bottom-left" reverseOrder={false} />
-      <h1 className="text-3xl text-center">Daily Thoughts</h1>
-      <main className="flex justify-center">
-        <Link href="/login">
-          <button>login</button>
-        </Link>
-
-        <button className="bg-red-700 p-2 rounded" onClick={logOutHandler}>
-          logout
-        </button>
-
-        {/* <ProtectedComponents>
-            <Thoughts />
-          </ProtectedComponents> */}
+      <main className="">
+        
       </main>
     </>
   );
