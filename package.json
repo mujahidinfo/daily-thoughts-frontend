@@ -9,6 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@mantine/core": "^5.10.3",
+    "@mantine/dates": "^5.10.3",
+    "@mantine/form": "^5.10.3",
+    "@mantine/hooks": "^5.10.3",
+    "@mantine/modals": "^5.10.3",
+    "@mantine/nprogress": "^5.10.3",
     "@next/font": "13.1.2",
     "@tabler/icons-react": "^2.2.0",
     "@types/node": "18.11.18",
@@ -16,6 +23,7 @@
     "@types/react-dom": "18.0.10",
     "axios": "^1.2.2",
     "daisyui": "^2.46.1",
+    "dayjs": "^1.11.7",
     "eslint": "8.31.0",
     "eslint-config-next": "13.1.2",
     "next": "13.1.2",

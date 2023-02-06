@@ -1,9 +1,10 @@
+import { Center } from "@mantine/core";
 import React from "react";
 import Login from "./Login";
 
 const index = () => {
   return (
-    <div className="w-full h-screen flex justify-center items-center">
+    <div>
       <Login />
     </div>
   );

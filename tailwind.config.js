@@ -5,8 +5,12 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      bangla: ["Hind Siliguri", "sans-serif"],
+      henry: ["Henny Penny", "cursive"],
+    },
   },
+  extend: {},
   daisyui: {
     themes: [],
   },

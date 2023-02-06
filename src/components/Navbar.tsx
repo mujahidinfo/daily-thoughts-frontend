@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="btm-nav">
+      <div className="btm-nav bg-white shadow-inner">
         {buttons?.map((button) => (
           <Link href={button.path} key={button.name}>
             <button>{button.icon}</button>

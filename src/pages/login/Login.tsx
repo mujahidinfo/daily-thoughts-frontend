@@ -1,63 +1,58 @@
-import { AxiosError } from "axios";
 import { FormEvent, FormEventHandler, useState } from "react";
 import { toast } from "react-hot-toast";
 import { login } from "../../api";
 import { NextPage } from "next";
 import Router from "next/router";
+import { useForm } from "@mantine/form";
+import {
+  TextInput,
+  PasswordInput,
+  Group,
+  Button,
+  Text,
+  Title,
+  Anchor,
+  Container,
+  Paper,
+} from "@mantine/core";
+import Link from "next/link";
+
+interface FormValues {
+  email: string;
+  password: string;
+}
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  // error label for all inputs
-  const [error, setError] = useState("");
-
-  // onBlur handler for email input
-  const handleEmailChange = (e: FormEvent<HTMLInputElement>) => {
-    const email = e.currentTarget.value;
-    if (!email) {
-      // set error label with emoji
-      setError("😢 Email is required");
-      return;
-    }
-    if (!email.includes("@")) {
-      setError("😢 Email is not valid");
-      return;
-    }
-    setEmail(email);
-  };
-  // onBlur handler for password input also validate password
-  const handlePasswordChange = (e: FormEvent<HTMLInputElement>) => {
-    const password = e.currentTarget.value;
-    if (!password) {
-      setError("😡 Password is required");
-      return;
-    }
-    if (password.length < 6) {
-      setError("😡 Password must be at least 6 characters");
-      return;
-    }
-    setPassword(password);
-  };
+  const form = useForm({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: (values) => {
+      const errors: Partial<FormValues> = {};
+      if (!values.email) {
+        errors.email = "Email is required";
+      }
+      if (!values.password) {
+        errors.password = "Password is required";
+      }
+      if (values.email && !values.email.includes("@")) {
+        errors.email = "Email is not valid";
+      }
+      if (values.password && values.password.length < 6) {
+        errors.password = "Password must be at least 6 characters";
+      }
+      return errors;
+    },
+  });
 
   // form submit handler
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // validate email and password
-    if (!email) {
-      setError("😢 Email is required");
-      return;
-    }
-    if (!password) {
-      setError("😡 Password is required");
-      return;
-    }
+  const handleSubmit = async (values: FormValues) => {
     // call login api with error handling
+    console.log("values", values);
     try {
-      const value = {
-        email,
-        password,
-      };
-      const res = await login(value);
+      const res = await login(values);
+      console.log("res", res);
       // handle status code
       if (res.status === 200) {
         // clear token from local storage
@@ -67,7 +62,7 @@ const Login = () => {
         // show success toast
         toast.success("Login success");
         // redirect to home page
-        window.location.href = "/";
+        window.location.href = "/profile";
       } else if (res.status === 400) {
         // show error toast
         toast.error("😡 Invalid email or password");
@@ -87,52 +82,49 @@ const Login = () => {
   };
 
   return (
-    <div className=" p-4 m-3 rounded-md w-1/2">
-      <h1 className="text-center text-2xl font-bold">Login</h1>
-
-      <form
-        className="form-control  flex flex-col gap-5"
-        onSubmit={handleSubmit}
+    <Container size={420} my={80}>
+      <Title
+        align="center"
+        sx={(theme) => ({
+          fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+          fontWeight: 900,
+        })}
       >
-        <div>
-          <label htmlFor="email" className="label">
-            Email
-          </label>
-          <input
-            className="input input-success w-full"
-            type="email"
-            name="email"
-            id="email"
-            onChange={handleEmailChange}
-            required
+        Welcome back!
+      </Title>
+      <Text color="dimmed" size="sm" align="center" mt={5}>
+        Do not have an account yet?{" "}
+        <Anchor component={Link} href="/signup" color="primary100.0">
+          Create account
+        </Anchor>
+      </Text>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+          <TextInput
+            withAsterisk
+            label="Email"
+            placeholder="your@email.com"
+            {...form.getInputProps("email")}
           />
-        </div>
-        <div>
-          <label htmlFor="password" className="label">
-            Password
-          </label>
-          <input
-            className="input input-success w-full"
-            type="password"
-            name="password"
-            id="password"
-            required
-            onChange={handlePasswordChange}
+          <PasswordInput
+            mt={5}
+            withAsterisk
+            label="Password"
+            placeholder="Password"
+            {...form.getInputProps("password")}
           />
-        </div>
-        {/* error label */}
-        <label htmlFor="error" className="label text-red-500 text-sm">
-          {error}
-        </label>
-        <button type="submit" className="btn">
-          Login
-        </button>
-        {/* register button */}
-        <button type="button" className="underline">
-          Register
-        </button>
+          <Group position="right" mt={15}>
+            <Button
+              type="submit"
+              fullWidth
+              className="bg-gray-900 hover:bg-slate-800"
+            >
+              login
+            </Button>
+          </Group>
+        </Paper>
       </form>
-    </div>
+    </Container>
   );
 };
 

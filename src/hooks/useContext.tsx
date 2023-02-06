@@ -5,6 +5,7 @@ import { JsxElement } from "typescript";
 
 interface User {
   id: string;
+  name: string;
   username: string;
   email: string;
 }
@@ -12,7 +13,7 @@ interface User {
 export const UserContext = createContext<any>({});
 
 export const UseWrapper = ({ children }: any) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ data: User | null }>({ data: null });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export const UseWrapper = ({ children }: any) => {
           const res = await getUser();
           setUser(res?.data);
         } else {
-          setUser(null);
+          setUser({ data: null });
         }
       } catch (error) {
         console.log("error", error);
