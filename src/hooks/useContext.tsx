@@ -24,7 +24,7 @@ export const UseWrapper = ({ children }: any) => {
         const token = localStorage.getItem("dt-token");
         if (token) {
           const res = await getUser();
-          setUser(res?.data);
+          setUser({data: res?.data});
         } else {
           setUser({ data: null });
         }
