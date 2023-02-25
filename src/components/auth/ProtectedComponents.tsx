@@ -8,11 +8,11 @@ const ProtectedComponents = ({ children }: any) => {
   const Router = useRouter();
   console.log("user", user);
   if (loading) return <div>Loading...</div>;
-  if (!user?.data) {
+  if (!user) {
     Router.push("/login");
   }
 
-  return user?.data ? <>{children}</> : null;
+  return user ? <>{children}</> : null;
 };
 
 export default ProtectedComponents;

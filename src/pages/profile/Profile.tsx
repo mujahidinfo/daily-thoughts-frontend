@@ -4,7 +4,8 @@ import { IconUser } from "@tabler/icons-react";
 import React from "react";
 
 const Profile = () => {
-  const { user, loading, setUser } = useUser();
+  const { user, setUser } = useUser();
+  console.log(user);
   const logout = () => {
     localStorage.removeItem("dt-token");
     setUser(null);
@@ -16,8 +17,8 @@ const Profile = () => {
           <IconUser />
           Profile
         </Text>
-        <h2>User: {user?.data?.name}</h2>
-        <h2 className="text-gray-500">Email: {user?.data?.email}</h2>
+        <h2>User: {user?.name}</h2>
+        <h2 className="text-gray-500">Email: {user?.email}</h2>
         <Button onClick={logout} className="bg-gray-800" fullWidth mt={10}>
           Logout
         </Button>

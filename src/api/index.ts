@@ -2,7 +2,6 @@ import axios, { Axios } from "axios";
 import { toast } from "react-hot-toast";
 import { AxiosRequestConfig } from "axios";
 import { AxiosResponse } from "axios";
-import { AxiosError } from "axios";
 import { AxiosPromise } from "axios";
 
 // Creating the API instance with the base url and the timeout

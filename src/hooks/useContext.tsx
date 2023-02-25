@@ -1,7 +1,7 @@
 // get user from token and store in state
 import { getUser } from "@/api";
+import { AxiosError } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
-import { JsxElement } from "typescript";
 
 interface User {
   id: string;
@@ -10,10 +10,16 @@ interface User {
   email: string;
 }
 
-export const UserContext = createContext<any>({});
+interface UserContextType {
+  user: User | null;
+  setUser: (user: User | null) => void;
+  loading: boolean;
+}
+
+export const UserContext = createContext<UserContextType | null>(null);
 
 export const UseWrapper = ({ children }: any) => {
-  const [user, setUser] = useState<{ data: User | null }>({ data: null });
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,15 +27,17 @@ export const UseWrapper = ({ children }: any) => {
     const fetchUser = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("dt-token");
-        if (token) {
-          const res = await getUser();
-          setUser({data: res?.data});
+        const res = await getUser();
+        if (res?.status === 200) {
+          setUser(res?.data);
         } else {
-          setUser({ data: null });
+          setUser(null);
         }
       } catch (error) {
-        console.log("error", error);
+        const err = error as AxiosError;
+        if (err?.response?.status === 401) {
+          setUser(null);
+        }
       } finally {
         setLoading(false);
       }
@@ -50,5 +58,9 @@ export const UseWrapper = ({ children }: any) => {
 };
 
 export const useUser = () => {
-  return useContext(UserContext);
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error("useUser must be used within a UseWrapper");
+  }
+  return context;
 };

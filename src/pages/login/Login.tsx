@@ -16,6 +16,7 @@ import {
   Paper,
 } from "@mantine/core";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 interface FormValues {
   email: string;
@@ -48,36 +49,17 @@ const Login = () => {
 
   // form submit handler
   const handleSubmit = async (values: FormValues) => {
-    // call login api with error handling
-    console.log("values", values);
     try {
       const res = await login(values);
-      console.log("res", res);
-      // handle status code
-      if (res.status === 200) {
-        // clear token from local storage
-        localStorage.removeItem("dt-token");
-        // set token in local storage
-        localStorage.setItem("dt-token", res?.data?.token);
-        // show success toast
-        toast.success("Login success");
-        // redirect to home page
-        window.location.href = "/profile";
-      } else if (res.status === 400) {
-        // show error toast
-        toast.error("😡 Invalid email or password");
-      } else {
-        // show error toast
-        toast.error("😡 Something went wrong");
+      localStorage.removeItem("dt-token");
+      localStorage.setItem("dt-token", res?.data?.token);
+      if (res?.status === 200) {
+        toast.success("Login successful");
+        Router.push("/profile");
       }
-    } catch (error: any) {
-      // check error type and show toast
-      console.log("error", error);
-      if (error.response.status === 400) {
-        toast.error("😡 Invalid email or password");
-      } else {
-        console.log("Login error", error);
-      }
+    } catch (error) {
+      const err = error as AxiosError;
+      toast.error(err?.message);
     }
   };
 
