@@ -4,6 +4,7 @@ import { UseWrapper } from "@/hooks/useContext";
 import "@/styles/globals.css";
 import { MantineProvider } from "@mantine/core";
 import type { AppProps } from "next/app";
+import Link from "next/link";
 import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -32,9 +33,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <RouterTransition />
         {/* Toaster Component*/}
         <Toaster reverseOrder={false} />
-        <h1 className="text-2xl font-henry font-bold text-center p-3 absolute top-0 w-full bg-white shadow-sm">
+        <Link
+          href="/"
+          className="text-2xl font-henry font-bold text-center p-3 absolute top-0 w-full bg-white shadow-sm"
+        >
           Thoughts Tracker
-        </h1>
+        </Link>
         <Component {...pageProps} />
         <Navbar />
       </MantineProvider>

@@ -1,5 +1,3 @@
-// get user from token and store in state
-import { getUser } from "@/api";
 import { AxiosError } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -27,17 +25,23 @@ export const UseWrapper = ({ children }: any) => {
     const fetchUser = async () => {
       setLoading(true);
       try {
-        const res = await getUser();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/user`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("dt-token")}`,
+          },
+        });
+        const data = await res.json();
+
         if (res?.status === 200) {
-          setUser(res?.data);
+          setUser(data);
         } else {
           setUser(null);
         }
       } catch (error) {
-        const err = error as AxiosError;
-        if (err?.response?.status === 401) {
-          setUser(null);
-        }
+        console.log(error);
+        setUser(null);
       } finally {
         setLoading(false);
       }

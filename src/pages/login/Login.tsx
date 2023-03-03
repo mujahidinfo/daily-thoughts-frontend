@@ -1,8 +1,4 @@
-import { FormEvent, FormEventHandler, useState } from "react";
 import { toast } from "react-hot-toast";
-import { login } from "../../api";
-import { NextPage } from "next";
-import Router from "next/router";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -46,16 +42,26 @@ const Login = () => {
       return errors;
     },
   });
-
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   // form submit handler
   const handleSubmit = async (values: FormValues) => {
     try {
-      const res = await login(values);
-      localStorage.removeItem("dt-token");
-      localStorage.setItem("dt-token", res?.data?.token);
+      const toastId = toast.loading("Logging in...");
+      // call login api
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/login`, {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      // get token from response and save it to local storage
+      const data = await res.json();
+      localStorage.setItem("dt-token", data?.token);
+      // if login success, redirect to profile page
       if (res?.status === 200) {
-        toast.success("Login successful");
-        Router.push("/profile");
+        window.location.href = "/profile";
+        toast.success("Logged in successfully", { id: toastId });
       }
     } catch (error) {
       const err = error as AxiosError;
